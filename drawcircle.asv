@@ -6,24 +6,47 @@ disp(width)
 %pause
 %for i=1:1000
 tic
-edge1=0;
-edge2=0;
+edge11=0;
+edge12=0;
+edge21=0;
+edge22=0;
 while 1
     cla
-    if edge1==0 & (pos(1)+size> width | pos(1)-size <0)
-        vel(1)=-(cres*vel(1));
-    end
-    if pos(2)+size>height | pos(2)-size<0
-        vel(2)=-(cres*vel(2));
-    end
-       
     
-    if pos2(1)+size> width | pos2(1)-size <0
-        vel2(1)=-cres*vel2(1);
+    if (pos(1)+size> width | pos(1)-size <0)
+        if edge11==0
+            vel(1)=-(cres*vel(1));
+            edge11=1;
+        end
+    else
+        edge11=0;
+    end
+    
+    if pos(2)+size>height | pos(2)-size<0
+           if edge12==0
+            vel(2)=-(cres*vel(2));
+            edge12=1;
+           end
+     else
+            edge12=0;
+    end
+    
+     if (pos2(1)+size> width | pos2(1)-size <0)
+        if edge21==0
+            vel2(1)=-(cres*vel2(1));
+            edge21=1;
+        end
+     else
+        edge21=0;
     end
     if pos2(2)+size>height | pos2(2)-size<0
-        vel2(2)=-cres*vel2(2);
-    end
+           if edge22==0
+            vel2(2)=-(cres*vel2(2));
+            edge22=1;
+           end
+     else
+            edge22=0;
+     end
         
     
     if ((pos2(2)-pos(2))^2+(pos2(1)-pos(1))^2) <= 4*size^2
@@ -46,6 +69,9 @@ while 1
     pos2(2)=pos2(2)+vel2(2);
     X =[ pos(1) pos2(1)];
     Y= [ pos(2),pos2(2)];
+    txt1=0.5*(vel(1)
+    text(x1,y1,txt1)
+
     
     %plot(X(1),Y(1),'rO','Markersize',size,'MarkerFaceColor',color1)
     %pdecirc(X(1),Y(1),size)

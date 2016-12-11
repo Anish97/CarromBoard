@@ -8,7 +8,7 @@ disp(width)
 tic
 edge11=0;
 edge12=0;
-edge2=0;
+edge21=0;
 edge22=0;
 while 1
     cla
@@ -21,6 +21,7 @@ while 1
     else
         edge11=0;
     end
+    
     if pos(2)+size>height | pos(2)-size<0
            if edge12==0
             vel(2)=-(cres*vel(2));
@@ -68,6 +69,9 @@ while 1
     pos2(2)=pos2(2)+vel2(2);
     X =[ pos(1) pos2(1)];
     Y= [ pos(2),pos2(2)];
+    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2)));
+    text(100,410,txt1);
+
     
     %plot(X(1),Y(1),'rO','Markersize',size,'MarkerFaceColor',color1)
     %pdecirc(X(1),Y(1),size)

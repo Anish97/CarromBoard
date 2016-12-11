@@ -8,7 +8,6 @@ cost=cos(theta);
 B=[vel(2)*cost-vel(1)*sint; vel2(2)*cost-vel2(1)*sint; (vel(1)*cost+vel(2)*sint)*(1+cres)/2+(vel2(1)*cost+vel2(2)*sint)*(1-cres)/2; (vel(1)*cost+vel(2)*sint)*(1-cres)/2+(vel2(1)*cost+vel2(2)*sint)*(1+cres)/2];
 % disp(B)
 A=[-sint cost 0 0;0 0 -sint cost;0 0 cost sint;cost sint 0 0];
-inv(A)*B
 pCell = num2cell(inv(A)*B);
 [vel(1) vel(2) vel2(1) vel2(2)] = pCell{:};
 %[vel(1) vel(2) vel2(1) vel2(2)]=matsplit(B'*inv(A'),1)
