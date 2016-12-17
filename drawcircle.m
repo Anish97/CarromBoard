@@ -10,6 +10,8 @@ edge11=0;
 edge12=0;
 edge21=0;
 edge22=0;
+ke1=0;
+ke2=0;
 
 while 1
     cla
@@ -90,7 +92,7 @@ while 1
     if ((pos2(2)-pos(2))^2+(pos2(1)-pos(1))^2) <= 4*size^2
         
             disp('Collision........')
-            collisionvelocities();
+          collisionvelocities();
 %             xi=(pos(1)+pos2(1))/2;
 %             yi=(pos(2)+pos2(2))/2;
 %             plot(xi,yi,'kO','Markersize',size+10,'MarkerFaceColor','black')
@@ -119,9 +121,19 @@ while 1
     
     X =[ pos(1) pos2(1)];
     Y= [ pos(2),pos2(2)];
-   txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+(ang1*size)^2+(ang2*size)^2)));
- %   txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2)));
+   if ke1<0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)
+       disp('Ball1');
+         disp(ke1-0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2));
+     end
+     if ke2<0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2)
+         disp('Ball2');
+          disp(ke2-0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2));
+      end
+    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+0.5*(ang1*size)^2+0.5*(ang2*size)^2)));
+%    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)));
     text(100,410,txt1);
+    ke1=0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2);
+    ke2=0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2);
 
     
     %plot(X(1),Y(1),'rO','Markersize',size,'MarkerFaceColor',color1)

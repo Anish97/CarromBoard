@@ -10,6 +10,8 @@ edge11=0;
 edge12=0;
 edge21=0;
 edge22=0;
+ke1=0;
+ke2=0;
 
 while 1
     cla
@@ -23,14 +25,15 @@ while 1
             end
              
              vel(2)=vel(2)-it;
-             ang1=ang1-sign(pos(1)-2*size)*2*it/size;           
+             ang1=ang1-sign(pos(1)-2*size)*2*it/size; 
+         
             edge11=1;
         end
     else
         edge11=0;
     end
     
-    if pos(2)+size>height | pos(2)-size<0
+    if (pos(2)+size>height | pos(2)-size<0)
            if edge12==0
             in=vel(2)*(1+cres);
             vel(2)=vel(2)-in;
@@ -40,7 +43,10 @@ while 1
             end
              
              vel(1)=vel(1)-it;
-             ang2=ang2+sign(pos(2)-2*size)*2*it/size; 
+             ang1=ang1+sign(pos(2)-2*size)*2*it/size; 
+             
+   
+             
             edge12=1;
            end
      else
@@ -49,8 +55,16 @@ while 1
     
      if (pos2(1)+size> width | pos2(1)-size <0)
         if edge21==0
-     %       ang2=ang2-sign(ang2)*2*cfric*abs(vel2(1))*(1+cres)/size;
-            vel2(1)=-(cres*vel2(1));
+            in=vel2(1)*(1+cres);
+            vel2(1)=vel2(1)-in;
+            it=(vel2(2)+sign(pos2(1)-2*size)*size*ang2)/3;
+            if(abs(it)>cfric*abs(in))
+             it=sign(it)*cfric*in;
+            end
+             
+             vel2(2)=vel2(2)-it;
+             ang2=ang2-sign(pos2(1)-2*size)*2*it/size; 
+
             edge21=1;
         end
      else
@@ -58,8 +72,16 @@ while 1
     end
     if pos2(2)+size>height | pos2(2)-size<0
            if edge22==0
-     %       ang2=ang2-sign(ang2)*2*cfric*abs(vel2(2))*(1+cres)/size;
-            vel2(2)=-(cres*vel2(2));
+            in=vel2(2)*(1+cres);
+            vel2(2)=vel2(2)-in;
+            it=(vel2(1)-sign(pos2(2)-2*size)*size*ang2)/3;
+            if(abs(it)>cfric*abs(in))
+             it=sign(it)*cfric*in;
+            end
+             
+             vel2(1)=vel2(1)-it;
+             ang2=ang2+sign(pos2(2)-2*size)*2*it/size; 
+
             edge22=1;
            end
      else
@@ -70,7 +92,7 @@ while 1
     if ((pos2(2)-pos(2))^2+(pos2(1)-pos(1))^2) <= 4*size^2
         
             disp('Collision........')
-     %       collisionvelocities();
+%            collisionvelocities();
 %             xi=(pos(1)+pos2(1))/2;
 %             yi=(pos(2)+pos2(2))/2;
 %             plot(xi,yi,'kO','Markersize',size+10,'MarkerFaceColor','black')
@@ -99,9 +121,18 @@ while 1
     
     X =[ pos(1) pos2(1)];
     Y= [ pos(2),pos2(2)];
- %   txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+(ang1*size)^2+(ang2*size)^2)));
-    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2)));
+   if ke1<0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2)
+       disp('Ball1');
+         disp(ke1-0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2));
+     end
+%     if ke~=0.5*(vel2(1)^2+vel2(2)^2+(ang2*size)^2)
+%          disp(ke-0.5*(vel2(1)^2+vel2(2)^2+(ang2*size)^2));
+      end
+    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+(ang1*size)^2+(ang2*size)^2)));
+ %   txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2)));
     text(100,410,txt1);
+    ke=0.5*(vel(1)^2+vel(2)^2+(ang1*size)^2);
+ %   ke=0.5*(vel2(1)^2+vel2(2)^2+(ang2*size)^2);
 
     
     %plot(X(1),Y(1),'rO','Markersize',size,'MarkerFaceColor',color1)
@@ -109,7 +140,7 @@ while 1
     circle2(X(1),Y(1),size,theta1);
     hold on
     %plot(X(2),Y(2),'gO','Markersize',size,'MarkerFaceColor',color2)
- %   circle2(X(2),Y(2),size,theta2);
+    circle2(X(2),Y(2),size,theta2);
     hold off
     axis([0, width, 0, height])
     drawnow
