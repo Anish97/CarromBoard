@@ -1,5 +1,5 @@
 function drawcircle   %(pos,size,color,vel,width,height)
-global pos vel vel2 width height size color1 color2 pos2 cres cfric theta1 theta2 ang1 ang2
+global pos vel vel2 width height size color1 color2 pos2 cres cfric theta1 theta2 ang1 ang2 beta
 
 
 %pause
@@ -18,31 +18,31 @@ while 1
     if (pos(1)+size> width | pos(1)-size <0)
         if edge11==0
             in=vel(1)*(1+cres);
-            vel(1)=vel(1)-in;
             it=(vel(2)+sign(pos(1)-2*size)*size*ang1)/3;
+            it*sign(it)*cfric*abs(in);
             if(abs(it)>cfric*abs(in))
-             it=sign(it)*cfric*in;
-            end
+             it=sign(it)*cfric*abs(in);
              
-             vel(2)=vel(2)-it;
+            end
+             vel=vel-[in it];
              ang1=ang1-sign(pos(1)-2*size)*2*it/size; 
          
             edge11=1;
         end
     else
         edge11=0;
-    end
+end
     
     if (pos(2)+size>height | pos(2)-size<0)
            if edge12==0
             in=vel(2)*(1+cres);
-            vel(2)=vel(2)-in;
             it=(vel(1)-sign(pos(2)-2*size)*size*ang1)/3;
             if(abs(it)>cfric*abs(in))
-             it=sign(it)*cfric*in;
-            end
+             it=sign(it)*cfric*abs(in);
              
-             vel(1)=vel(1)-it;
+            end
+           
+             vel=vel-[it in];
              ang1=ang1+sign(pos(2)-2*size)*2*it/size; 
              
    
@@ -59,7 +59,7 @@ while 1
             vel2(1)=vel2(1)-in;
             it=(vel2(2)+sign(pos2(1)-2*size)*size*ang2)/3;
             if(abs(it)>cfric*abs(in))
-             it=sign(it)*cfric*in;
+             it=sign(it)*cfric*abs(in);
             end
              
              vel2(2)=vel2(2)-it;
@@ -76,7 +76,7 @@ while 1
             vel2(2)=vel2(2)-in;
             it=(vel2(1)-sign(pos2(2)-2*size)*size*ang2)/3;
             if(abs(it)>cfric*abs(in))
-             it=sign(it)*cfric*in;
+            it=sign(it)*cfric*abs(in);
             end
              
              vel2(1)=vel2(1)-it;
@@ -86,13 +86,17 @@ while 1
            end
      else
             edge22=0;
-     end
+    end
+     
+    if edge11+edge12+edge21+edge22>0
+        checkke();
+    end
         
     
     if ((pos2(2)-pos(2))^2+(pos2(1)-pos(1))^2) <= 4*size^2
         
             disp('Collision........')
-          collisionvelocities();
+            collisionvelocities();
 %             xi=(pos(1)+pos2(1))/2;
 %             yi=(pos(2)+pos2(2))/2;
 %             plot(xi,yi,'kO','Markersize',size+10,'MarkerFaceColor','black')
@@ -119,25 +123,24 @@ while 1
     theta2=theta2+ang2;
 %    end
     
-    X =[ pos(1) pos2(1)];
-    Y= [ pos(2),pos2(2)];
-   if ke1<0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)
-       disp('Ball1');
-         disp(ke1-0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2));
-     end
-     if ke2<0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2)
-         disp('Ball2');
-          disp(ke2-0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2));
-      end
-    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+0.5*(ang1*size)^2+0.5*(ang2*size)^2)));
+    X =[pos(1) pos2(1)];
+    Y= [pos(2) pos2(2)];
+    
+%     vel
+%     vel2
+%     ang1
+%     ang2
+    
+   txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+0.5*(ang1*size)^2+0.5*(ang2*size)^2)));
 %    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)));
     text(100,410,txt1);
     ke1=0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2);
     ke2=0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2);
-
+    ke=0.5*(vel(1)^2+vel(2)^2+vel2(1)^2+vel2(2)^2+0.5*(ang1*size)^2+0.5*(ang2*size)^2);
     
     %plot(X(1),Y(1),'rO','Markersize',size,'MarkerFaceColor',color1)
     %pdecirc(X(1),Y(1),size)
+    
     circle2(X(1),Y(1),size,theta1);
     hold on
     %plot(X(2),Y(2),'gO','Markersize',size,'MarkerFaceColor',color2)
@@ -164,3 +167,35 @@ py = y-r;
 h = rectangle('Position',[px py d d],'Curvature',[1,1]);
 daspect([1,1,1])
 line([x x+r*cos(theta)],[y y+r*sin(theta)]); 
+
+function edge = xwallcollision(pos,vel,ang,edge)
+global size width cres cfric
+if (pos(1)+size> width | pos(1)-size <0)
+        if edge==0
+            in=vel(1)*(1+cres);
+            it=(vel(2)+sign(pos(1)-2*size)*size*ang)/3;
+            if(abs(it)>cfric*abs(in))
+             it=sign(it)*cfric*in;
+            end
+
+             vel=vel-[in it];
+             ang=ang-sign(pos(1)-2*size)*2*it/size; 
+         
+            edge=1;
+        end
+    else
+        edge=0;
+end
+
+function checkke
+global vel vel2 size ang1 ang2 ke1 ke2
+if ke1<0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)
+        disp('Ball1');
+          disp(ke1-0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2));
+end
+if ke2<0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2)
+          disp('Ball2');
+           disp(ke2-0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2));
+end
+
+
