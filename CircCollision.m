@@ -1,46 +1,32 @@
 function CircCollision
 
-global vel vel2 size color1 color2 pos pos2 width height cres cfric theta1 theta2 ang1 ang2 beta
+global vel size color1 color2 pos width height cres cfric theta ang beta particles
 
-cres=1;
-cfric=10000;
-beta=0;
+cres=0.9;
+cfric=5;
+beta=0.5;
 size =20;
 width=400;
 height =400;
-
+particles=10;
 % x=(width)/2;
 % y=(height)/2;
 
 %pos =[size+randi(width-2*size)-1+rand(1) size+randi(height-2*size)-1+rand(1)];
-pos=[200 200]
+pos=size+randi(width-2*size,particles,2)-1+rand(particles,2)
 %pos2=[size+randi(width-2*size)-1+rand(1) pos(2)]
 %pos2=[size+randi(width-2*size)-1+rand(1) size+randi(height-2*size)-1+rand(1)];
-pos2=[300 200]
-ang1=rand(1);
-ang2=rand(1);
-ang1=ang1*(2*randi(2)-3);
-ang2=ang2*(2*randi(2)-3);
-ang1=2;
-ang2=-2;
-theta1=randi(7)*(2*pi/7)
-theta2=randi(7)*(2*pi/7)
 
-vel =[rand(1)+randi(10)-1 rand(1)+randi(10)-1];
-vel(1)=vel(1)*(2*randi(2)-3);
-%vel(2)=vel(2)*(2*randi(2)-3);
-vel(1)=10;
-vel(2)=0;
-vel
+ang=rand(particles,1).*(2*randi(2,particles,1)-3)
+%ang2=rand(1)*(2*randi(2)-3);
+%ang1=20;
+%ang2=20;
+theta=rand(particles,1)*(2*pi/7)
+%theta2=randi(7)*(2*pi/7)
 
- vel2 =[rand(1)+randi(10)-1 rand(1)+randi(10)-1];
- vel2(1)=vel2(1)*(2*randi(2)-3); %randomize direction
-% vel2(2)=vel2(2)*(2*randi(2)-3);
-vel2(1)=-5;
- vel2(2)=0;
- vel2
-
-
+vel =(rand(particles,2)+randi(20,particles,2)-1).*(2*randi(2,particles,1)-3)
+%vel(1)=10;
+%vel(2)=0;
 color1 ='red';
 color2 ='green';
 figure(1)

@@ -1,5 +1,5 @@
-function collisionvelocities
-global pos vel vel2 width height size color1 color2 pos2 cres cfric theta1 theta2 ang1 ang2 beta
+function collisionvelocities(p,q)
+global vel size color1 color2 pos width height cres cfric theta ang beta particles
 % theta=atan((pos2(2)-pos(2))/(pos2(1)-pos(1)));
 % sint=sin(theta);
 % cost=cos(theta);
@@ -8,14 +8,12 @@ global pos vel vel2 width height size color1 color2 pos2 cres cfric theta1 theta
 % A=[-sint cost 0 0;0 0 -sint cost;0 0 cost sint;cost sint 0 0];
 % pCell = num2cell(inv(A)*B);
 % [vel(1) vel(2) vel2(1) vel2(2)] = pCell{:};
-velv=[vel 0];
-vel2v=[vel2 0];
-k=pos2-pos;
+velv=[vel zeros(particles,1)];
+k=pos(q,:)-pos(p,:);
 k=[k/norm(k) 0];
-ang1v=[0 0 ang1];
-ang2v=[0 0 ang2];
-g=velv-vel2v;
-s=0.5*(ang1v+ang2v);
+angv=[zeros(particles,2) ang];
+g=velv(p,:)-velv(q,:);
+s=0.5*(angv(p,:)+angv(q,:));
 A=-0.5*(1+cres)*dot(g,k);
 G=g+2*size*cross(s,k);
 j=cross(cross(G,k),k)/norm(cross(G,k));
@@ -31,16 +29,12 @@ if tan(phi)<mu
 else
     B=-cfric*A;
 end
-B
 
 J=A*k+B*j;
+vel([p q],:)=vel([p q],:)+[J(1:2);-J(1:2)];
 
-vel=vel+J(1:2);
-vel2=vel2-J(1:2);
-
-angv=cross(k,J)*2/size;
-ang1=ang1+angv(3);
-ang2=ang2+angv(3);
+angj=cross(k,J)*2/size;
+ang([p q])=ang([p q])+angj(:,3);
 end
 
 % function v=cross(X,Y)
