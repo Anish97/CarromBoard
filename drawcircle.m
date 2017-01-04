@@ -13,64 +13,11 @@ ke2=0;
 
 while 1
     cla
+    
+    
 for i=1:particles
     xwallcollision(i);    
     ywallcollision(i);
-   
-%     if (pos(1,2)+size>height | pos(1,2)-size<0)
-%            if edge12==0
-%             in=vel(1,2)*(1+cres);
-%             it=(vel(1,1)-sign(pos(1,2)-2*size)*size*ang(1))/3;
-%             if(abs(it)>cfric*abs(in))
-%              it=sign(it)*cfric*abs(in);
-%              
-%             end
-%            
-%              vel=vel-[it in;0 0];
-%              ang(1)=ang(1)+sign(pos(1,2)-2*size)*2*it/size; 
-%              
-%    
-%              
-%             edge12=1;
-%            end
-%      else
-%             edge12=0;
-%     end
-    
-%      if (pos2(1)+size> width | pos2(1)-size <0)
-%         if edge21==0
-%             in=vel2(1)*(1+cres);
-%             vel2(1)=vel2(1)-in;
-%             it=(vel2(2)+sign(pos2(1)-2*size)*size*ang2)/3;
-%             if(abs(it)>cfric*abs(in))
-%              it=sign(it)*cfric*abs(in);
-%             end
-%              
-%              vel2(2)=vel2(2)-it;
-%              ang2=ang2-sign(pos2(1)-2*size)*2*it/size; 
-% 
-%             edge21=1;
-%         end
-%      else
-%         edge21=0;
-%     end
-%     if pos2(2)+size>height | pos2(2)-size<0
-%            if edge22==0
-%             in=vel2(2)*(1+cres);
-%             vel2(2)=vel2(2)-in;
-%             it=(vel2(1)-sign(pos2(2)-2*size)*size*ang2)/3;
-%             if(abs(it)>cfric*abs(in))
-%             it=sign(it)*cfric*abs(in);
-%             end
-%              
-%              vel2(1)=vel2(1)-it;
-%              ang2=ang2+sign(pos2(2)-2*size)*2*it/size; 
-% 
-%             edge22=1;
-%            end
-%      else
-%             edge22=0;
-%     end
      
     if sum(edge)>0
         checkke();
@@ -79,7 +26,7 @@ for i=1:particles
     for j=i+1:particles
     if ((pos(j,2)-pos(i,2))^2+(pos(j,1)-pos(i,1))^2) <= 4*size^2
             if col(i,j)==0
-            disp('Collision........')
+ %           disp('Collision........')
             collisionvelocities(i,j);
             col(i,j)=1;
             end
@@ -88,9 +35,6 @@ for i=1:particles
     end
     end
     
-%    if sum(vel.^2)>5
-   
-
     if theta(i)>2*pi
         theta(i)=mod(theta(i),2*pi);
     end
@@ -105,7 +49,7 @@ end
     
     txt1=strcat('Kinetic Energy: ',num2str(sum(0.5*(sum(vel.^2)+0.5*sum(ang.^2)*size^2))));
 %    txt1=strcat('Kinetic Energy: ',num2str(0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2)));
-    text(100,410,txt1);
+    text(width/3,height,txt1);
 %    ke1=0.5*(vel(1)^2+vel(2)^2+0.5*(ang1*size)^2);
 %    ke2=0.5*(vel2(1)^2+vel2(2)^2+0.5*(ang2*size)^2);
     ke=0.5*(sum(vel.^2))+0.25*size^2*sum(ang.^2);
@@ -157,7 +101,9 @@ if (pos(i,1)+size> width | pos(i,1)-size <0)
             end
              vel(i,:)=vel(i,:)-[in it];
              ang(i)=ang(i)-sign(pos(i,1)-2*size)*2*it/size; 
-         
+ %            pos(i,1)=pos(i,1)-sign(pos(i,1)-2*size)*2*(vel(i,1)-pos(i,1));
+            pos(i,1)-0.5*width*(sign(pos(i,1)-2*size)+1)+size*sign(pos(i,1)-2*size)
+            pos(i,1)=pos(i,1)-(1+cres)*(pos(i,1)-0.5*width*(sign(pos(i,1)-2*size)+1)+size*sign(pos(i,1)-2*size))-vel(i,1);
             edge(i,1)=1;
         end
     else
@@ -178,7 +124,7 @@ if (pos(i,2)+size>height | pos(i,2)-size<0)
              vel(i,:)=vel(i,:)-[it in];
              ang(i)=ang(i)+sign(pos(i,2)-2*size)*2*it/size; 
              
-   
+            pos(i,2)=pos(i,2)-(1+cres)*(pos(i,2)-0.5*height*(sign(pos(i,2)-2*size)+1)+size*sign(pos(i,2)-2*size))-vel(i,2);
              
             edge(i,2)=1;
            end
