@@ -17,6 +17,7 @@ s=0.5*(angv(p,:)+angv(q,:));
 A=-0.5*(1+cres)*dot(g,k);
 G=g+2*size*cross(s,k);
 j=cross(cross(G,k),k)/norm(cross(G,k));
+t=abs((sqrt((pos(p,2)-pos(q,2))^2+(pos(p,1)-pos(q,1))^2)-2*size)/(dot(velv(p,:)-velv(q,:),k)))
 
 if k(2)==0
     j=[-sign(G(2)) 0 0];
@@ -35,6 +36,9 @@ vel([p q],:)=vel([p q],:)+[J(1:2);-J(1:2)];
 
 angj=cross(k,J)*2/size;
 ang([p q])=ang([p q])+angj(:,3);
+
+pos([p q],:)=pos([p q],:)+(1-t)*(vel([p q],:)-velv([p q],[1 2]))+velv([p q],[1 2])-vel([p q],:);
+theta([p q])=theta([p q])+(1-t)*(ang([p q])-angv([p q],3))+angv([p q],3)-ang([p q]);
 end
 
 % function v=cross(X,Y)
